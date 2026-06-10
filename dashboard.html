@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shree Manju Homoeopathic Clinic & Health Care Centre</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+body{
+background:#f5f7fa;
+padding-bottom:100px;
+font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.header{
+background:linear-gradient(135deg, #1a5632, #2d8a4e);
+color:white;
+padding:15px 20px;
+position:sticky;
+top:0;
+z-index:1000;
+box-shadow:0 2px 10px rgba(0,0,0,0.2);
+}
+.header-container {
+display: flex;
+align-items: center;
+justify-content: space-between;
+position: relative;
+}
+.header-top{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:20px;
+flex: 1;
+}
+.header-logo{
+height:90px;
+border-radius:8px;
+flex-shrink:0;
+}
+.header-text{
+text-align:center;
+}
+.header h2{
+font-weight:600;
+letter-spacing:1px;
+margin:0;
+line-height:1.2;
+}
+.header-subtitle{
+margin:5px 0 0 0;
+opacity:0.9;
+font-size:15px;
+}
+.header-contact{
+font-size:15px;
+opacity:0.9;
+text-align:center;
+margin-top:5px;
+}
+.nav-tabs{
+border-bottom:3px solid #2d8a4e;
+}
+.nav-tabs .nav-link{
+color:#555;
+font-weight:500;
+padding:12px 20px;
+border:none;
+transition:all 0.3s;
+}
+.nav-tabs .nav-link:hover{
+color:#1a5632;
+background:#e8f5e9;
+}
+.nav-tabs .nav-link.active{
+background:#2d8a4e;
+color:white;
+border:none;
+border-radius:4px 4px 0 0;
+}
+.card{
+box-shadow:0px 0px 15px rgba(0,0,0,.1);
+margin-top:20px;
+border-radius:8px;
+border:none;
+}
+.section-title{
+background:#2d8a4e;
+color:white;
+padding:10px 20px;
+border-radius:5px;
+display:inline-block;
+margin-bottom:15px;
+font-weight:500;
+}
+thead{
+background:#2d8a4e !important;
+color:white;
+}
+.footer{
+text-align:center;
+padding:15px;
+background:#2d8a4e;
+color:white;
+margin-top:30px;
+}
+.form-label{
+font-weight:500;
+color:#333;
+}
+hr{
+border-top:2px solid #2d8a4e;
+opacity:0.5;
+}
+.low-stock{ background:#fff3cd; }
+.out-stock{ background:#f8d7da; }
+.token-box{
+background:#e8f5e9;
+border:1px solid #2d8a4e;
+padding:12px;
+border-radius:8px;
+text-align:center;
+font-weight:600;
+}
+#printSection { display: none; }
+.logout-btn {
+  background: rgba(255,255,255,0.2);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.5);
+  padding: 8px 18px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.logout-btn:hover {
+  background: rgba(255,255,255,0.35);
+  border-color: rgba(255,255,255,0.8);
+}
+@media (max-width: 768px) {
+  .header-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .logout-btn {
+    position: static;
+    align-self: flex-end;
+  }
+}
+@media print {
+  @page { margin: 0; size: A4 portrait; }
+  body { margin: 0; padding: 0; }
+  .header, .container-fluid, .footer, .nav-tabs, .tab-content, .card, .tab-pane, button, .btn, .logout-btn {
+    display: none !important;
+  }
+  #printSection {
+    display: block !important;
+    visibility: visible !important;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: auto;
+    background: white;
+    padding: 0;
+    margin: 0;
+    z-index: 999999;
+  }
+  #printSection * {
+    visibility: visible !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-container">
+    <div class="header-top">
+      <img src="https://uploads.onecompiler.io/43748udj2/1780742591310/photo_2026-06-06_10-55-18.jpg" alt="Clinic Logo" class="header-logo">
+      <div class="header-text">
+        <h2>Shree Manju Homoeopathic Clinic & Health Care Centre</h2>
+        <p class="header-subtitle">Natural Healing Since 1998</p>
+        <div class="header-contact">Mob. No: 9004530642 | 9695333642</div>
+      </div>
+    </div>
+    <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+  </div>
+</div>
+
+<div id="printSection"></div>
+
+<div class="container-fluid mt-3">
+<ul class="nav nav-tabs justify-content-center flex-wrap" id="mainTabs" role="tablist">
+<li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#home">Home</a></li>
+<li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#registration">Registration</a></li>
+<li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#opd">OPD</a></li>
+<li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#ipd">IPD</a></li>
+<li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#medicine">Medicine</a></li>
+<li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#billing">Billing</a></li>
+</ul>
+
+<div class="tab-content">
+
+<div class="tab-pane fade show active" id="home">
+<div class="row mt-4">
+<div class="col-md-4"><div class="card p-4 text-center" onclick="document.querySelector('[href=#registration]').click()" style="cursor:pointer"><h2 class="text-success">Registration</h2><p>Register new patients and manage records</p></div></div>
+<div class="col-md-4"><div class="card p-4 text-center" onclick="document.querySelector('[href=#opd]').click()" style="cursor:pointer"><h2 class="text-primary">OPD</h2><p>Outpatient consultation and prescription</p></div></div>
+<div class="col-md-4"><div class="card p-4 text-center" onclick="document.querySelector('[href=#ipd]').click()" style="cursor:pointer"><h2 class="text-warning">IPD</h2><p>Inpatient admission and treatment</p></div></div>
+<div class="col-md-4"><div class="card p-4 text-center" onclick="document.querySelector('[href=#medicine]').click()" style="cursor:pointer"><h2 class="text-info">Medicine</h2><p>Stock management and alerts</p></div></div>
+<div class="col-md-4"><div class="card p-4 text-center" onclick="document.querySelector('[href=#billing]').click()" style="cursor:pointer"><h2 class="text-danger">Billing</h2><p>Generate bills and payments</p></div></div>
+<div class="col-md-4"><div class="card p-4 text-center" onclick="window.print()" style="cursor:pointer"><h2 class="text-secondary">Print</h2><p>Print current page</p></div></div>
+</div>
+<div class="row mt-4">
+<div class="col-md-3"><div class="card p-3 text-center"><h5>Total Patients</h5><h2 class="text-success" id="homeTotalPatients">0</h2></div></div>
+<div class="col-md-3"><div class="card p-3 text-center"><h5>Today's OPD</h5><h2 class="text-primary" id="homeTodayOpd">0</h2></div></div>
+<div class="col-md-3"><div class="card p-3 text-center"><h5>Beds Available</h5><h2 class="text-info" id="homeBedsAvailable">10</h2></div></div>
+<div class="col-md-3"><div class="card p-3 text-center"><h5>Today Collection</h5><h2 class="text-warning" id="homeCollection">Rs 0</h2></div></div>
+</div>
+<div class="card p-4 mt-4">
+<span class="section-title">About Our Health Centre</span><hr>
+<div class="row">
+<div class="col-md-12">
+<p style="font-size:16px;line-height:1.8;text-align:justify;color:#333;">
+<strong>Shree Manju Homoeopathic Clinic & Health Care Centre</strong> is a trusted name in holistic and natural healing, serving the community since 1998. With over 25 years of dedicated service, we specialize in providing safe, effective, and personalized homoeopathic treatments for a wide range of acute and chronic ailments. Our clinic is equipped with modern facilities while staying true to the principles of classical homoeopathy.
+</p>
+<p style="font-size:16px;line-height:1.8;text-align:justify;color:#333;">
+We offer comprehensive healthcare services including <strong>Outpatient (OPD)</strong> consultations, <strong>Inpatient (IPD)</strong> admissions with comfortable bed facilities, a well-stocked <strong>Homoeopathic Pharmacy</strong> with genuine medicines, and transparent <strong>Billing</strong> services. Our experienced doctor takes time to understand each patient's unique symptoms, lifestyle, and medical history to prescribe individualized remedies that stimulate the body's natural healing process.
+</p>
+<p style="font-size:16px;line-height:1.8;text-align:justify;color:#333;">
+At Shree Manju Homoeopathic Clinic, we believe in treating the patient, not just the disease. Whether it's skin disorders, respiratory issues, digestive problems, allergies, joint pains, or pediatric conditions, our goal is to restore health gently and permanently. Visit us for a compassionate, affordable, and natural approach to wellness.
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div class="tab-pane fade" id="registration">
+<div class="card p-4">
+<span class="section-title">Patient Registration</span><hr>
+<div class="row">
+<div class="col-md-6"><label class="form-label">Registration Date</label><input type="date" class="form-control" id="regDate"></div>
+<div class="col-md-6"><label class="form-label">Registration No.</label><input type="text" class="form-control" id="regNoDisplay" readonly></div>
+<div class="col-md-6 mt-3"><label class="form-label">Patient Name *</label><input type="text" class="form-control" id="regName"></div>
+<div class="col-md-3 mt-3"><label class="form-label">Age *</label><input type="number" class="form-control" id="regAge"></div>
+<div class="col-md-3 mt-3"><label class="form-label">Gender *</label><select class="form-control" id="regGender"><option>Male</option><option>Female</option><option>Other</option></select></div>
+<div class="col-md-6 mt-3"><label class="form-label">Mobile Number *</label><input type="text" class="form-control" id="regMobile"></div>
+<div class="col-md-6 mt-3"><label class="form-label">Amount (Rs)</label><input type="number" class="form-control" id="regAmount" value="0"></div>
+<div class="col-md-12 mt-3"><label class="form-label">Address</label><textarea class="form-control" rows="2" id="regAddress"></textarea></div>
+</div>
+<div class="mt-4">
+<button class="btn btn-success" onclick="saveRegistration()">Save</button>
+<button class="btn btn-secondary" onclick="clearRegForm()">Clear</button>
+<button class="btn btn-info" onclick="printRegSlip()">Print Slip</button>
+</div>
+</div>
+<div class="card p-4">
+<h5>Registered Patients</h5>
+<input type="text" class="form-control mb-3" id="patientSearch" placeholder="Search by name, mobile, reg no...">
+<table class="table table-bordered"><thead><tr><th>Reg. No.</th><th>Name</th><th>Age</th><th>Mobile</th><th>Action</th></tr></thead><tbody id="patientTable"></tbody></table>
+</div>
+</div>
+
+<div class="tab-pane fade" id="opd">
+<div class="card p-4">
+<span class="section-title">OPD</span><hr>
+<div class="row">
+<div class="col-md-3"><div class="token-box">Token: <span id="opdToken">1</span></div></div>
+<div class="col-md-3"><div class="token-box">Date: <span id="opdDate"></span></div></div>
+<div class="col-md-3"><label class="form-label">OPD Date</label><input type="date" class="form-control" id="opdDateInput"></div>
+</div>
+<div class="row mt-3">
+<div class="col-md-4"><label class="form-label">Search Patient</label><input type="text" class="form-control" id="opdSearch" placeholder="Name / Reg No / Mobile"></div>
+<div class="col-md-2 mt-4"><button class="btn btn-info" onclick="loadOpdPatient()">Load</button></div>
+</div>
+<div class="row mt-3">
+<div class="col-md-4"><label class="form-label">Name</label><input type="text" class="form-control" id="opdName" readonly></div>
+<div class="col-md-2"><label class="form-label">Age</label><input type="text" class="form-control" id="opdAge" readonly></div>
+<div class="col-md-2"><label class="form-label">Gender</label><input type="text" class="form-control" id="opdGender" readonly></div>
+<div class="col-md-4"><label class="form-label">Reg. No.</label><input type="text" class="form-control" id="opdRegNo" readonly></div>
+<div class="col-md-6 mt-3"><label class="form-label">Chief Complaint</label><textarea class="form-control" id="opdComplaint"></textarea></div>
+<div class="col-md-6 mt-3"><label class="form-label">Diagnosis</label><textarea class="form-control" id="opdDiagnosis"></textarea></div>
+<div class="col-md-12 mt-3"><label class="form-label">Prescription</label><textarea class="form-control" id="opdPrescription"></textarea></div>
+</div>
+<div class="mt-3"><button class="btn btn-success" onclick="saveOpd()">Save OPD</button></div>
+</div>
+<div class="card p-4">
+<h5>OPD Records</h5>
+<input type="date" class="form-control mb-3" id="opdFilterDate">
+<table class="table table-bordered"><thead><tr><th>Token</th><th>Date</th><th>Reg. No.</th><th>Patient</th><th>Diagnosis</th><th>Time</th></tr></thead><tbody id="opdTable"></tbody></table>
+</div>
+</div>
+
+<div class="tab-pane fade" id="ipd">
+<div class="card p-4">
+<span class="section-title">IPD</span><hr>
+<div class="row">
+<div class="col-md-4"><label class="form-label">Search Patient</label><input type="text" class="form-control" id="ipdSearch" placeholder="Name / Reg No / Mobile"></div>
+<div class="col-md-2 mt-4"><button class="btn btn-info" onclick="loadIpdPatient()">Load</button></div>
+</div>
+<div class="row mt-3">
+<div class="col-md-4"><label class="form-label">Name</label><input type="text" class="form-control" id="ipdName" readonly></div>
+<div class="col-md-2"><label class="form-label">Age</label><input type="text" class="form-control" id="ipdAge" readonly></div>
+<div class="col-md-2"><label class="form-label">Gender</label><input type="text" class="form-control" id="ipdGender" readonly></div>
+<div class="col-md-4"><label class="form-label">Reg. No.</label><input type="text" class="form-control" id="ipdRegNo" readonly></div>
+<div class="col-md-3 mt-3"><label class="form-label">Bed No</label><input type="text" class="form-control" id="ipdBedNo"></div>
+<div class="col-md-3 mt-3"><label class="form-label">Admit Date</label><input type="date" class="form-control" id="ipdAdmitDate"></div>
+<div class="col-md-3 mt-3"><label class="form-label">Discharge Date</label><input type="date" class="form-control" id="ipdDischargeDate"></div>
+<div class="col-md-3 mt-3"><label class="form-label">Discharge Amount</label><input type="number" class="form-control" id="ipdDischargeAmount" value="0"></div>
+<div class="col-md-3 mt-3"><label class="form-label">Fee</label><input type="number" class="form-control" id="ipdFee" value="0"></div>
+<div class="col-md-3 mt-3"><label class="form-label">Final Bill</label><input type="number" class="form-control" id="ipdFinalBill" value="0"></div>
+</div>
+<div class="mt-3">
+<button class="btn btn-success" onclick="saveIpd()">Save IPD</button>
+<button class="btn btn-danger" onclick="dischargeIpd()">Discharge</button>
+</div>
+</div>
+<div class="card p-4">
+<h5>Admitted Patients</h5>
+<table class="table table-bordered"><thead><tr><th>Reg. No.</th><th>Patient</th><th>Bed</th><th>Admit Date</th><th>Discharge Date</th><th>Discharge Amt</th><th>Status</th><th>Action</th></tr></thead><tbody id="ipdTable"></tbody></table>
+</div>
+</div>
+
+<div class="tab-pane fade" id="medicine">
+<div class="card p-4">
+<span class="section-title">Medicine Inventory</span><hr>
+<div class="row mb-3">
+<div class="col-md-4"><label class="form-label">Search Medicine</label><input type="text" class="form-control" id="medSearch"></div>
+<div class="col-md-4"><label class="form-label">Search Potency</label><input type="text" class="form-control" id="medPotencySearch"></div>
+<div class="col-md-4"><label class="form-label">Search Category</label><input type="text" class="form-control" id="medCategorySearch"></div>
+</div>
+<div class="row">
+<div class="col-md-3"><label class="form-label">Medicine *</label><input type="text" class="form-control" id="medName" list="homeoMedicineList"></div>
+<div class="col-md-2"><label class="form-label">Category</label><select class="form-control" id="medCategory"><option>Tablet</option><option>Syrup</option><option>Drop</option><option>Ointment</option><option>Injection</option><option>Powder</option><option>Mother Tincture</option><option>Dilution</option></select></div>
+<div class="col-md-2"><label class="form-label">Potency</label><input type="text" class="form-control" id="medPotency"></div>
+<div class="col-md-2"><label class="form-label">Quantity</label><input type="number" class="form-control" id="medQty" value="0"></div>
+<div class="col-md-2"><label class="form-label">Price (Rs)</label><input type="number" class="form-control" id="medPrice" value="0"></div>
+<div class="col-md-1"><label class="form-label">Alert</label><input type="number" class="form-control" id="medMinStock" value="10"></div>
+</div>
+<div class="mt-3">
+<button class="btn btn-success" onclick="addMedicine()">Add</button>
+<button class="btn btn-primary" onclick="updateMedicineDetails()">Update</button>
+<button class="btn btn-danger" onclick="deleteMedicine()">Delete</button>
+</div>
+<datalist id="homeoMedicineList"></datalist>
+</div>
+<div class="card p-4">
+<h5>Medicine List</h5>
+<table class="table table-bordered"><thead><tr><th>#</th><th>Name</th><th>Category</th><th>Potency</th><th>Qty</th><th>Price</th><th>Status</th><th>Action</th></tr></thead><tbody id="medListTable"></tbody></table>
+</div>
+</div>
+
+<div class="tab-pane fade" id="billing">
+<div class="card p-4">
+<span class="section-title">Billing</span><hr>
+<div class="row">
+<div class="col-md-4"><label class="form-label">Registration No.</label><input type="text" class="form-control" id="billRegNo" placeholder="Reg. No."></div>
+<div class="col-md-4"><label class="form-label">Bill No.</label><input type="text" class="form-control" id="billNo" readonly></div>
+<div class="col-md-4"><label class="form-label">Bill Date</label><input type="date" class="form-control" id="billDate"></div>
+<div class="col-md-4 mt-3"><label class="form-label">Patient Name</label><input type="text" class="form-control" id="billPatientName" readonly></div>
+<div class="col-md-4 mt-3"><label class="form-label">Mobile</label><input type="text" class="form-control" id="billPatientMobile" readonly></div>
+<div class="col-md-4 mt-3"><label class="form-label">Age / Gender</label><input type="text" class="form-control" id="billPatientAgeGender" readonly></div>
+<div class="col-md-12 mt-3"><label class="form-label">Address</label><textarea class="form-control" id="billPatientAddress" rows="2" readonly></textarea></div>
+</div>
+<hr>
+<div class="row">
+<div class="col-md-4"><label class="form-label">Medicine Name</label><select class="form-control" id="billMedicineName" onchange="autoFillBillMedicine()"><option value="">-- Select Medicine --</option></select></div>
+<div class="col-md-2"><label class="form-label">Potency</label><input type="text" class="form-control" id="billMedicinePotency" readonly></div>
+<div class="col-md-2"><label class="form-label">Qty</label><input type="number" class="form-control" id="billMedicineQty" value="1" min="1" oninput="calcBillItemAmount()"></div>
+<div class="col-md-2"><label class="form-label">Rate (Rs)</label><input type="number" class="form-control" id="billMedicineRate" readonly></div>
+<div class="col-md-2"><label class="form-label">Amount (Rs)</label><input type="number" class="form-control" id="billMedicineAmount" readonly></div>
+</div>
+<div class="mt-3">
+<button class="btn btn-success" onclick="addBillItem()">Add Item</button>
+<button class="btn btn-warning" onclick="clearBillItem()">Clear Item</button>
+</div>
+<div class="mt-4">
+<table class="table table-bordered"><thead><tr><th>#</th><th>Medicine</th><th>Potency</th><th>Qty</th><th>Rate</th><th>Amount</th><th>Action</th></tr></thead><tbody id="billItemsTable"></tbody></table>
+</div>
+<div class="row">
+<div class="col-md-4"><label class="form-label">Discount (Rs)</label><input type="number" class="form-control" id="billDiscount" value="0" oninput="calcGrandTotal()"></div>
+<div class="col-md-4"><label class="form-label">Payment Mode</label><select class="form-control" id="billPaymentMode"><option>Cash</option><option>UPI</option><option>Card</option><option>Pending</option></select></div>
+<div class="col-md-4"><label class="form-label">Grand Total (Rs)</label><input type="number" class="form-control" id="billGrandTotal" readonly></div>
+</div>
+<input type="hidden" id="editingBillIndex" value="-1">
+<div class="mt-3">
+<button class="btn btn-primary" id="saveBillBtn" onclick="saveBill()">Save Bill</button>
+<button class="btn btn-success" id="printBillBtn" onclick="printBill()">Print Bill</button>
+<button class="btn btn-secondary" onclick="newBill()">New Bill</button>
+<button class="btn btn-warning" id="updateBillBtn" onclick="updateBill()" style="display:none;">Update Bill</button>
+<button class="btn btn-danger" id="cancelEditBtn" onclick="cancelEdit()" style="display:none;">Cancel Edit</button>
+</div>
+</div>
+
+<div class="card p-4">
+<h5>Saved Bills</h5>
+<div class="row mb-3">
+<div class="col-md-4"><label class="form-label">Search by Date</label><input type="date" class="form-control" id="billSearchDate"></div>
+<div class="col-md-4"><label class="form-label">Search Bill No</label><input type="text" class="form-control" id="billSearchNo" placeholder="Bill No..."></div>
+<div class="col-md-4"><label class="form-label">Search Patient</label><input type="text" class="form-control" id="billSearchPatient" placeholder="Patient name..."></div>
+</div>
+<table class="table table-bordered"><thead><tr><th>Bill No</th><th>Date</th><th>Patient</th><th>Mobile</th><th>Total</th><th>Payment</th><th>Action</th></tr></thead><tbody id="savedBillsTable"></tbody></table>
+</div>
+</div>
+
+</div>
+</div>
+
+<div class="footer">
+<h5>Shree Manju Homoeopathic Clinic & Health Care Centre</h5>
+<p style="margin:0;">Mob. No: 9004530642 | 9695333642 | Natural Healing Since 1998</p>
+<p style="margin:5px 0 0 0;font-size:14px;"><strong>Address:</strong> Answa, Dautapur, Handia, Prayagraj, Uttar Pradesh - 221503</p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+(function() {
+  if (localStorage.getItem("isLoggedIn") !== "true") {
+    window.location.href = "index.html";
+  }
+})();
+
+function logout() {
+  localStorage.removeItem("isLoggedIn");
+  window.location.href = "index.html";
+}
+
+const els = {};
+function getEl(id) {
+  if (!els[id]) els[id] = document.getElementById(id);
+  return els[id];
+}
+
+const homeoMedicines = [
+"Aconite","Aesculus","Agaricus","Agnus Castus","Ailanthus","Allium Cepa","Aloe Socotrina","Alumina","Ambra Grisea","Ammonium Carb","Anacardium","Antimonium Crudum","Antimonium Tart","Apis Mellifica","Argentum Nitricum","Arnica Montana","Arsenicum Album","Arsenicum Iodatum","Asafoetida","Aurum Metallicum",
+"Baptisia","Baryta Carbonica","Belladonna","Bellis Perennis","Benzoic Acid","Berberis Vulgaris","Borax","Bovista","Bromium","Bryonia Alba","Bufo Rana",
+"Cactus Grandiflorus","Calcarea Carbonica","Calcarea Fluorica","Calcarea Phosphorica","Calcarea Sulphurica","Calendula Officinalis","Camphora","Cannabis Indica","Cantharis","Capsicum","Carbo Animalis","Carbo Vegetabilis","Carcinosin","Carduus Marianus","Caulophyllum","Causticum","Ceanothus","Chamomilla","Chelidonium","China Officinalis","Chininum Sulph","Cicuta","Cimicifuga","Cina","Cinnabaris","Clematis","Cocculus Indicus","Coffea Cruda","Colchicum","Collinsonia","Colocynthis","Conium Maculatum","Crotalus Horridus","Croton Tiglium","Cuprum Metallicum","Cyclamen",
+"Digitalis","Dioscorea","Drosera","Dulcamara",
+"Echinacea","Elaps","Eupatorium Perfoliatum","Euphrasia",
+"Ferrum Metallicum","Ferrum Phosphoricum","Fluoric Acid","Formica Rufa",
+"Gelsemium","Glonoine","Graphites","Gratiola","Guaiacum",
+"Hamamelis","Helleborus","Helonias","Hepar Sulph","Hydrastis","Hyoscyamus","Hypericum",
+"Ignatia Amara","Iodium","Ipecacuanha","Iris Versicolor",
+"Jaborandi",
+"Kali Arsenicosum","Kali Bichromicum","Kali Carbonicum","Kali Iodatum","Kali Muriaticum","Kali Phosphoricum","Kali Sulphuricum","Kreosotum",
+"Lac Caninum","Lachesis","Lapis Albus","Ledum Pal","Lilium Tigrinum","Lobelia","Lycopodium","Lyssin",
+"Magnesia Carbonica","Magnesia Muriatica","Magnesia Phosphorica","Medorrhinum","Merc Sol","Merc Corrosivus","Mercurius Iodatum","Mezereum","Millefolium","Moschus","Muriatic Acid",
+"Natrum Arsenicosum","Natrum Carbonicum","Natrum Muriaticum","Natrum Phosphoricum","Natrum Sulphuricum","Nitric Acid","Nux Moschata","Nux Vomica",
+"Oleander",
+"Palladium","Petroleum","Phosphoric Acid","Phosphorus","Phytolacca","Picric Acid","Platina","Plumbum Metallicum","Podophyllum","Psorinum","Pulsatilla","Pyrogenium",
+"Ranunculus Bulbosus","Ratanhia","Rhododendron","Rhus Tox","Rhus Venenata","Robinia","Rumex","Ruta Graveolens",
+"Sabadilla","Sabina","Sambucus","Sanguinaria","Sanicula","Sarsaparilla","Secale Cornutum","Selenium","Senega","Sepia","Silicea","Spigelia","Spongia Tosta","Stannum","Staphysagria","Stramonium","Sulphur","Sulphuric Acid","Symphytum","Syphilinum",
+"Tabacum","Tarentula","Tellurium","Terebinthina","Theridion","Thuja Occidentalis","Tuberculinum",
+"Urtica Urens","Ustilago",
+"Valeriana","Veratrum Album","Verbascum","Vinca Minor","Viola Odorata","Vipera",
+"Wyethia","Zincum Metallicum"
+];
+
+let billItems = [];
+
+function debounce(func, wait) {
+  let timeout;
+  return function(...args) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), wait);
+  };
+}
+
+function safeGet(key) { 
+  try { return JSON.parse(localStorage.getItem(key) || "[]"); } 
+  catch(e) { return []; } 
+}
+function safeSet(key, val) { 
+  try { localStorage.setItem(key, JSON.stringify(val)); } 
+  catch(e) { console.warn('Storage full'); }
+}
+
+function generateRegNo() {
+  const patients = safeGet("allPatients");
+  let maxNum = 0;
+  for(let p of patients) {
+    const parts = (p.regNo || "").split("/");
+    const lastPart = parseInt(parts[parts.length - 1]);
+    if(!isNaN(lastPart) && lastPart > maxNum) maxNum = lastPart;
+  }
+  return "SMC/" + new Date().getFullYear() + "/" + 
+    String(new Date().getMonth()+1).padStart(2,'0') + "/" + 
+    String(maxNum + 1).padStart(4,'0');
+}
+
+function generateBillNo(regNo) {
+  const now = new Date();
+  const yy = now.getFullYear().toString().slice(-2);
+  const mm = String(now.getMonth()+1).padStart(2,'0');
+  const dd = String(now.getDate()).padStart(2,'0');
+  let regLast = "0000";
+  if(regNo) {
+    const parts = regNo.split("/");
+    regLast = parts[parts.length - 1] || "0000";
+  }
+  return "BILL-" + yy + mm + dd + "-" + regLast;
+}
+
+function init() {
+  const today = new Date().toISOString().split('T')[0];
+  getEl("regDate").value = today;
+  getEl("opdDate").textContent = new Date().toLocaleDateString();
+  getEl("opdDateInput").value = today;
+  getEl("ipdAdmitDate").value = today;
+  getEl("billDate").value = today;
+  getEl("regNoDisplay").value = generateRegNo();
+  getEl("billNo").value = generateBillNo("");
+  
+  getEl("homeoMedicineList").innerHTML = homeoMedicines.map(m => `<option value="${m}"></option>`).join("");
+  
+  refreshAll();
+  
+  const patientSearch = getEl("patientSearch");
+  patientSearch.addEventListener('input', debounce(renderPatients, 300));
+  
+  const medSearch = getEl("medSearch");
+  const medPotencySearch = getEl("medPotencySearch");
+  const medCategorySearch = getEl("medCategorySearch");
+  medSearch.addEventListener('input', debounce(renderMedicines, 300));
+  medPotencySearch.addEventListener('input', debounce(renderMedicines, 300));
+  medCategorySearch.addEventListener('input', debounce(renderMedicines, 300));
+  
+  const opdFilterDate = getEl("opdFilterDate");
+  opdFilterDate.addEventListener('change', renderOpd);
+  
+  const billSearchDate = getEl("billSearchDate");
+  const billSearchNo = getEl("billSearchNo");
+  const billSearchPatient = getEl("billSearchPatient");
+  billSearchDate.addEventListener('change', debounce(renderSavedBills, 300));
+  billSearchNo.addEventListener('input', debounce(renderSavedBills, 300));
+  billSearchPatient.addEventListener('input', debounce(renderSavedBills, 300));
+  
+  const billRegNo = getEl("billRegNo");
+  billRegNo.addEventListener('input', debounce(autoFillBillPatientByLast4, 500));
+}
+
+function refreshAll() {
+  renderPatients();
+  renderMedicines();
+  renderOpd();
+  renderIpd();
+  refreshBillMedicineList();
+  renderBillItems();
+  calcGrandTotal();
+  updateHomeStats();
+  renderSavedBills();
+}
+
+function updateHomeStats() {
+  const patients = safeGet("allPatients");
+  const bills = safeGet("allBills");
+  const todayOpdRecords = safeGet("opd_all").filter(r => r.date === new Date().toISOString().split('T')[0]);
+  
+  getEl("homeTotalPatients").textContent = patients.length;
+  getEl("homeTodayOpd").textContent = todayOpdRecords.length;
+  getEl("homeBedsAvailable").textContent = Math.max(0, 10 - safeGet("allIpdRecords").filter(r => r.status !== "Discharged").length);
+  
+  const today = new Date().toISOString().split('T')[0];
+  const collection = bills.filter(b => b.date === today).reduce((s,b) => s + parseFloat(b.grandTotal||0), 0);
+  getEl("homeCollection").textContent = "Rs " + collection.toFixed(2);
+}
+
+function saveRegistration() {
+  const p = {
+    regNo: getEl("regNoDisplay").value,
+    regDate: getEl("regDate").value,
+    name: getEl("regName").value.trim(),
+    age: getEl("regAge").value,
+    gender: getEl("regGender").value,
+    mobile: getEl("regMobile").value.trim(),
+    amount: getEl("regAmount").value || "0",
+    address: getEl("regAddress").value.trim()
+  };
+  if(!p.name || !p.mobile) { alert("Fill required fields"); return; }
+  
+  let arr = safeGet("allPatients");
+  const idx = arr.findIndex(x => x.regNo === p.regNo || x.mobile === p.mobile);
+  if(idx >= 0) arr[idx] = p; else arr.push(p);
+  safeSet("allPatients", arr);
+  getEl("regNoDisplay").value = generateRegNo();
+  alert("Registration saved");
+  refreshAll();
+}
+
+function clearRegForm() {
+  getEl("regName").value = "";
+  getEl("regAge").value = "";
+  getEl("regGender").value = "Male";
+  getEl("regMobile").value = "";
+  getEl("regAmount").value = "0";
+  getEl("regAddress").value = "";
+  getEl("regNoDisplay").value = generateRegNo();
+}
+
+function renderPatients() {
+  const q = (getEl("patientSearch").value || "").toLowerCase();
+  const patients = safeGet("allPatients");
+  const filtered = patients.filter(p => 
+    (p.name||"").toLowerCase().includes(q) || 
+    (p.mobile||"").includes(q) || 
+    (p.regNo||"").toLowerCase().includes(q)
+  );
+  
+  const tbody = getEl("patientTable");
+  if(filtered.length === 0) {
+    tbody.innerHTML = "<tr><td colspan='5' class='text-center'>No patients</td></tr>";
+    return;
+  }
+  
+  const rows = filtered.map(p => 
+    `<tr><td>${p.regNo}</td><td>${p.name}</td><td>${p.age}</td><td>${p.mobile}</td>
+    <td><button class="btn btn-sm btn-info" onclick="editPatient('${p.regNo}')">Edit</button> 
+    <button class="btn btn-sm btn-success" onclick="loadBillPatientByRegNo('${p.regNo}')">Bill</button> 
+    <button class="btn btn-sm btn-warning" onclick="printRegSlipByRegNo('${p.regNo}')">Print</button></td></tr>`
+  ).join("");
+  tbody.innerHTML = rows;
+}
+
+function editPatient(regNo) {
+  const p = safeGet("allPatients").find(x => x.regNo === regNo);
+  if(!p) return;
+  getEl("regDate").value = p.regDate || new Date().toISOString().split('T')[0];
+  getEl("regNoDisplay").value = p.regNo;
+  getEl("regName").value = p.name;
+  getEl("regAge").value = p.age;
+  getEl("regGender").value = p.gender;
+  getEl("regMobile").value = p.mobile;
+  getEl("regAmount").value = p.amount || "0";
+  getEl("regAddress").value = p.address;
+  document.querySelector('[href="#registration"]').click();
+}
+
+function printRegSlip() {
+  const name = getEl("regName").value.trim();
+  if(!name) { alert("Fill patient details first"); return; }
+  const printSection = getEl("printSection");
+  printSection.innerHTML = createRegSlipHTML(
+    getEl("regNoDisplay").value,
+    getEl("regDate").value,
+    name,
+    getEl("regAge").value,
+    getEl("regGender").value,
+    getEl("regMobile").value,
+    getEl("regAddress").value,
+    getEl("regAmount").value
+  );
+  window.print();
+}
+
+function printRegSlipByRegNo(regNo) {
+  const p = safeGet("allPatients").find(x => x.regNo === regNo);
+  if(!p) return;
+  const printSection = getEl("printSection");
+  printSection.innerHTML = createRegSlipHTML(
+    p.regNo,
+    p.regDate,
+    p.name,
+    p.age,
+    p.gender,
+    p.mobile,
+    p.address,
+    p.amount
+  );
+  window.print();
+}
+
+function createRegSlipHTML(regNo, date, name, age, gender, mobile, address, amount) {
+  return `
+<div style="font-family:'Segoe UI',sans-serif;max-width:400px;margin:20px auto;border:2px solid #1a5632;padding:20px;text-align:center;">
+<img src="https://uploads.onecompiler.io/43748udj2/1780742591310/photo_2026-06-06_10-55-18.jpg" style="max-width:60px;margin-bottom:10px;">
+<h3 style="margin:0;color:#1a5632;font-size:16px;">Shree Manju Homoeopathic Clinic & Health Care Centre</h3>
+<p style="margin:0;font-size:11px;">Natural Healing Since 1998 | Mob: 9004530642 / 9695333642</p>
+<p style="margin:2px 0 0 0;font-size:10px;">Answa, Dautapur, Handia, Prayagraj, Uttar Pradesh - 221503</p>
+<hr style="border-color:#1a5632;">
+<h4 style="color:#1a5632;font-size:14px;">REGISTRATION SLIP</h4>
+<table style="width:100%;font-size:13px;text-align:left;">
+<tr><td style="font-weight:bold;">Reg. No.</td><td>: ${regNo}</td></tr>
+<tr><td style="font-weight:bold;">Date</td><td>: ${date || "-"}</td></tr>
+<tr><td style="font-weight:bold;">Patient Name</td><td>: ${name || "-"}</td></tr>
+<tr><td style="font-weight:bold;">Age / Gender</td><td>: ${age || "-"} / ${gender || "-"}</td></tr>
+<tr><td style="font-weight:bold;">Mobile</td><td>: ${mobile || "-"}</td></tr>
+<tr><td style="font-weight:bold;">Address</td><td>: ${address || "-"}</td></tr>
+<tr><td style="font-weight:bold;">Amount Paid</td><td>: Rs ${amount || "0"}</td></tr>
+</table>
+<hr style="border-color:#1a5632;">
+<div style="text-align:right;font-size:12px;margin-top:30px;">Authorized Signatory<br><br>_______________</div>
+</div>`;
+}
+
+function loadOpdPatient() {
+  const q = (getEl("opdSearch").value || "").toLowerCase();
+  const p = safeGet("allPatients").find(x => (x.name||"").toLowerCase().includes(q) || (x.mobile||"").includes(q) || (x.regNo||"").toLowerCase().includes(q));
+  if(!p) { alert("Patient not found"); return; }
+  getEl("opdName").value = p.name;
+  getEl("opdAge").value = p.age;
+  getEl("opdGender").value = p.gender;
+  getEl("opdRegNo").value = p.regNo;
+}
+
+function saveOpd() {
+  if(!getEl("opdRegNo").value) { alert("Load patient first"); return; }
+  const opdDate = getEl("opdDateInput").value || new Date().toISOString().split('T')[0];
+  const rec = { 
+    token: Date.now().toString().slice(-4), 
+    date: opdDate, 
+    regNo: getEl("opdRegNo").value, 
+    patient: getEl("opdName").value, 
+    complaint: getEl("opdComplaint").value, 
+    diagnosis: getEl("opdDiagnosis").value, 
+    prescription: getEl("opdPrescription").value, 
+    time: new Date().toLocaleTimeString() 
+  };
+  const arr = safeGet("opd_all");
+  arr.push(rec);
+  safeSet("opd_all", arr);
+  alert("OPD saved");
+  renderOpd();
+  updateHomeStats();
+}
+
+function renderOpd() {
+  const filterDate = getEl("opdFilterDate").value;
+  let arr = safeGet("opd_all");
+  if(filterDate) arr = arr.filter(r => r.date === filterDate);
+  arr.sort((a,b) => (b.date||"").localeCompare(a.date||"") || (b.time||"").localeCompare(a.time||""));
+  
+  const tbody = getEl("opdTable");
+  if(arr.length === 0) {
+    tbody.innerHTML = "<tr><td colspan='6' class='text-center'>No OPD records</td></tr>";
+    return;
+  }
+  tbody.innerHTML = arr.map(r => `<tr><td>${r.token}</td><td>${r.date || ""}</td><td>${r.regNo}</td><td>${r.patient}</td><td>${r.diagnosis || ""}</td><td>${r.time}</td></tr>`).join("");
+}
+
+function loadIpdPatient() {
+  const q = (getEl("ipdSearch").value || "").toLowerCase();
+  const p = safeGet("allPatients").find(x => (x.name||"").toLowerCase().includes(q) || (x.mobile||"").includes(q) || (x.regNo||"").toLowerCase().includes(q));
+  if(!p) { alert("Patient not found"); return; }
+  getEl("ipdName").value = p.name;
+  getEl("ipdAge").value = p.age;
+  getEl("ipdGender").value = p.gender;
+  getEl("ipdRegNo").value = p.regNo;
+}
+
+function saveIpd() {
+  if(!getEl("ipdRegNo").value) { alert("Load patient first"); return; }
+  const arr = safeGet("allIpdRecords");
+  arr.push({ 
+    regNo: getEl("ipdRegNo").value, 
+    name: getEl("ipdName").value, 
+    bed: getEl("ipdBedNo").value, 
+    admitDate: getEl("ipdAdmitDate").value, 
+    dischargeDate: getEl("ipdDischargeDate").value, 
+    dischargeAmount: getEl("ipdDischargeAmount").value, 
+    status: "Admitted", 
+    fee: getEl("ipdFee").value, 
+    finalBill: getEl("ipdFinalBill").value 
+  });
+  safeSet("allIpdRecords", arr);
+  alert("IPD saved");
+  renderIpd();
+  updateHomeStats();
+}
+
+function dischargeIpd() {
+  const regNo = getEl("ipdRegNo").value;
+  if(!regNo) { alert("Load patient first"); return; }
+  const arr = safeGet("allIpdRecords");
+  const idx = arr.findIndex(x => x.regNo === regNo);
+  if(idx >= 0) {
+    arr[idx].dischargeDate = getEl("ipdDischargeDate").value;
+    arr[idx].dischargeAmount = getEl("ipdDischargeAmount").value;
+    arr[idx].status = "Discharged";
+    safeSet("allIpdRecords", arr);
+    alert("Patient discharged successfully");
+    renderIpd();
+    updateHomeStats();
+  }
+}
+
+function editIpdRecord(index) {
+  const arr = safeGet("allIpdRecords");
+  const r = arr[index];
+  if(!r) return;
+  getEl("ipdRegNo").value = r.regNo;
+  getEl("ipdName").value = r.name;
+  getEl("ipdBedNo").value = r.bed || "";
+  getEl("ipdAdmitDate").value = r.admitDate || "";
+  getEl("ipdDischargeDate").value = r.dischargeDate || "";
+  getEl("ipdDischargeAmount").value = r.dischargeAmount || "0";
+  getEl("ipdFee").value = r.fee || "0";
+  getEl("ipdFinalBill").value = r.finalBill || "0";
+  document.querySelector('[href="#ipd"]').click();
+}
+
+function renderIpd() {
+  const arr = safeGet("allIpdRecords");
+  const tbody = getEl("ipdTable");
+  if(arr.length === 0) {
+    tbody.innerHTML = "<tr><td colspan='8' class='text-center'>No IPD records</td></tr>";
+    return;
+  }
+  tbody.innerHTML = arr.map((r,i) => 
+    `<tr><td>${r.regNo}</td><td>${r.name}</td><td>${r.bed || ""}</td><td>${r.admitDate || ""}</td>
+    <td>${r.dischargeDate || "-"}</td><td>Rs ${r.dischargeAmount || "0"}</td>
+    <td><span class="badge ${r.status === 'Discharged' ? 'bg-danger' : 'bg-success'}">${r.status || ""}</span></td>
+    <td><button class="btn btn-sm btn-info" onclick="editIpdRecord(${i})">Edit</button></td></tr>`
+  ).join("");
+}
+
+function addMedicine() {
+  const name = getEl("medName").value.trim();
+  const potency = getEl("medPotency").value.trim();
+  if(!name) { alert("Enter medicine name"); return; }
+  
+  let arr = safeGet("medicines");
+  const item = {
+    name,
+    category: getEl("medCategory").value,
+    potency,
+    quantity: parseInt(getEl("medQty").value||0),
+    price: parseFloat(getEl("medPrice").value||0),
+    minStock: parseInt(getEl("medMinStock").value||10)
+  };
+  const idx = arr.findIndex(m => m.name.toLowerCase() === name.toLowerCase() && (m.potency||"").toLowerCase() === potency.toLowerCase());
+  if(idx >= 0) arr[idx] = item; else arr.push(item);
+  safeSet("medicines", arr);
+  alert("Medicine saved");
+  renderMedicines();
+  refreshBillMedicineList();
+}
+
+function updateMedicineDetails() { addMedicine(); }
+
+function deleteMedicine() {
+  const name = getEl("medName").value.trim().toLowerCase();
+  const potency = getEl("medPotency").value.trim().toLowerCase();
+  let arr = safeGet("medicines").filter(m => !(m.name.toLowerCase() === name && (m.potency||"").toLowerCase() === potency));
+  safeSet("medicines", arr);
+  renderMedicines();
+  refreshBillMedicineList();
+}
+
+function renderMedicines() {
+  const q = (getEl("medSearch")?.value || "").toLowerCase();
+  const pq = (getEl("medPotencySearch")?.value || "").toLowerCase();
+  const cq = (getEl("medCategorySearch")?.value || "").toLowerCase();
+  
+  const arr = safeGet("medicines").filter(m => 
+    (m.name||"").toLowerCase().includes(q) && 
+    (m.potency||"").toLowerCase().includes(pq) && 
+    (m.category||"").toLowerCase().includes(cq)
+  );
+  
+  const tbody = getEl("medListTable");
+  if(arr.length === 0) {
+    tbody.innerHTML = "<tr><td colspan='8' class='text-center'>No medicines found</td></tr>";
+    return;
+  }
+  
+  tbody.innerHTML = arr.map((m,i) => {
+    const qty = parseInt(m.quantity||0), min = parseInt(m.minStock||10);
+    const status = qty === 0 ? "Out of Stock" : qty <= min ? "Low Stock" : "In Stock";
+    const cls = qty === 0 ? "out-stock" : qty <= min ? "low-stock" : "";
+    return `<tr class="${cls}"><td>${i+1}</td><td>${m.name}</td><td>${m.category}</td>
+    <td>${m.potency}</td><td>${qty}</td><td>${m.price}</td><td>${status}</td>
+    <td><button class="btn btn-sm btn-info" onclick="editMed('${encodeURIComponent(m.name)}','${encodeURIComponent(m.potency||"")}')">Edit</button></td></tr>`;
+  }).join("");
+}
+
+function editMed(name,potency) {
+  name = decodeURIComponent(name);
+  potency = decodeURIComponent(potency);
+  const m = safeGet("medicines").find(x => x.name.toLowerCase() === name.toLowerCase() && (x.potency||"").toLowerCase() === potency.toLowerCase());
+  if(!m) return;
+  getEl("medName").value = m.name;
+  getEl("medCategory").value = m.category;
+  getEl("medPotency").value = m.potency;
+  getEl("medQty").value = m.quantity;
+  getEl("medPrice").value = m.price;
+  getEl("medMinStock").value = m.minStock;
+  document.querySelector('[href="#medicine"]').click();
+}
+
+function refreshBillMedicineList() {
+  const meds = safeGet("medicines");
+  const sel = getEl("billMedicineName");
+  sel.innerHTML = '<option value="">-- Select Medicine --</option>' + 
+    meds.map(m => `<option value="${m.name}|||${m.potency||""}|||${m.price||0}">${m.name} (${m.potency||"N/A"}) - Rs ${m.price||0}</option>`).join("");
+}
+
+function autoFillBillPatientByLast4() {
+  const input = getEl("billRegNo").value.trim();
+  if(input.length < 4) return;
+  
+  const last4 = input.slice(-4).toLowerCase();
+  const patients = safeGet("allPatients");
+  const p = patients.find(x => {
+    const parts = (x.regNo||"").toLowerCase().split("/");
+    return parts.length > 0 && parts[parts.length - 1] === last4;
+  });
+  
+  if(!p) {
+    getEl("billPatientName").value = "";
+    getEl("billPatientMobile").value = "";
+    getEl("billPatientAgeGender").value = "";
+    getEl("billPatientAddress").value = "";
+    return;
+  }
+  getEl("billRegNo").value = p.regNo;
+  getEl("billPatientName").value = p.name || "";
+  getEl("billPatientMobile").value = p.mobile || "";
+  getEl("billPatientAgeGender").value = (p.age||"") + " / " + (p.gender||"");
+  getEl("billPatientAddress").value = p.address || "";
+  getEl("billNo").value = generateBillNo(p.regNo);
+}
+
+function loadBillPatientByRegNo(regNo) {
+  getEl("billRegNo").value = regNo;
+  getEl("billNo").value = generateBillNo(regNo);
+  getEl("billDate").value = new Date().toISOString().split('T')[0];
+  billItems = [];
+  autoFillBillPatientByLast4();
+  renderBillItems();
+  calcGrandTotal();
+  document.querySelector('[href="#billing"]').click();
+}
+
+function autoFillBillMedicine() {
+  const val = getEl("billMedicineName").value;
+  if(!val) return;
+  const parts = val.split("|||");
+  getEl("billMedicinePotency").value = parts[1] || "";
+  getEl("billMedicineRate").value = parts[2] || 0;
+  calcBillItemAmount();
+}
+
+function calcBillItemAmount() {
+  const qty = parseFloat(getEl("billMedicineQty").value||0);
+  const rate = parseFloat(getEl("billMedicineRate").value||0);
+  getEl("billMedicineAmount").value = (qty * rate).toFixed(2);
+}
+
+function addBillItem() {
+  const val = getEl("billMedicineName").value;
+  if(!val) { alert("Select medicine"); return; }
+  const parts = val.split("|||");
+  billItems.push({
+    name: parts[0], 
+    potency: parts[1] || "", 
+    qty: parseFloat(getEl("billMedicineQty").value||0), 
+    rate: parseFloat(getEl("billMedicineRate").value||0), 
+    amount: parseFloat(getEl("billMedicineAmount").value||0)
+  });
+  renderBillItems();
+  clearBillItem();
+  calcGrandTotal();
+}
+
+function renderBillItems() {
+  const tbody = getEl("billItemsTable");
+  if(billItems.length === 0) {
+    tbody.innerHTML = "<tr><td colspan='7' class='text-center'>No items added</td></tr>";
+    return;
+  }
+  tbody.innerHTML = billItems.map((it,i) => 
+    `<tr><td>${i+1}</td><td>${it.name}</td><td>${it.potency}</td><td>${it.qty}</td>
+    <td>${it.rate}</td><td>${it.amount.toFixed(2)}</td>
+    <td><button class="btn btn-sm btn-danger" onclick="removeBillItem(${i})">Remove</button></td></tr>`
+  ).join("");
+}
+
+function removeBillItem(i) { billItems.splice(i,1); renderBillItems(); calcGrandTotal(); }
+
+function clearBillItem() {
+  getEl("billMedicineName").value = "";
+  getEl("billMedicinePotency").value = "";
+  getEl("billMedicineQty").value = "1";
+  getEl("billMedicineRate").value = "";
+  getEl("billMedicineAmount").value = "";
+}
+
+function calcGrandTotal() {
+  const total = billItems.reduce((s,it) => s + parseFloat(it.amount||0), 0);
+  const discount = parseFloat(getEl("billDiscount").value||0);
+  getEl("billGrandTotal").value = Math.max(0, total - discount).toFixed(2);
+}
+
+function newBill() {
+  billItems = [];
+  getEl("billNo").value = generateBillNo("");
+  getEl("billDate").value = new Date().toISOString().split('T')[0];
+  getEl("billRegNo").value = "";
+  getEl("billPatientName").value = "";
+  getEl("billPatientMobile").value = "";
+  getEl("billPatientAgeGender").value = "";
+  getEl("billPatientAddress").value = "";
+  getEl("billDiscount").value = "0";
+  getEl("billPaymentMode").value = "Cash";
+  getEl("editingBillIndex").value = "-1";
+  getEl("saveBillBtn").style.display = "inline-block";
+  getEl("printBillBtn").style.display = "inline-block";
+  getEl("updateBillBtn").style.display = "none";
+  getEl("cancelEditBtn").style.display = "none";
+  renderBillItems();
+  calcGrandTotal();
+}
+
+function saveBill() {
+  if(!getEl("billPatientName").value) { alert("Load patient first"); return; }
+  if(billItems.length === 0) { alert("Add at least one medicine item"); return; }
+  
+  const bills = safeGet("allBills");
+  bills.push({
+    billNo: getEl("billNo").value,
+    date: getEl("billDate").value,
+    regNo: getEl("billRegNo").value,
+    patientName: getEl("billPatientName").value,
+    mobile: getEl("billPatientMobile").value,
+    ageGender: getEl("billPatientAgeGender").value,
+    address: getEl("billPatientAddress").value,
+    items: [...billItems],
+    discount: parseFloat(getEl("billDiscount").value||0),
+    paymentMode: getEl("billPaymentMode").value,
+    grandTotal: parseFloat(getEl("billGrandTotal").value||0)
+  });
+  safeSet("allBills", bills);
+  alert("Bill saved successfully!");
+  renderSavedBills();
+  newBill();
+  updateHomeStats();
+}
+
+function editBill(billNo) {
+  const bills = safeGet("allBills");
+  const idx = bills.findIndex(b => b.billNo === billNo);
+  if(idx < 0) { alert("Bill not found"); return; }
+  
+  const b = bills[idx];
+  getEl("billRegNo").value = b.regNo || "";
+  getEl("billNo").value = b.billNo;
+  getEl("billDate").value = b.date || "";
+  getEl("billPatientName").value = b.patientName || "";
+  getEl("billPatientMobile").value = b.mobile || "";
+  getEl("billPatientAgeGender").value = b.ageGender || "";
+  getEl("billPatientAddress").value = b.address || "";
+  billItems = [...b.items];
+  getEl("billDiscount").value = b.discount || "0";
+  getEl("billPaymentMode").value = b.paymentMode || "Cash";
+  getEl("editingBillIndex").value = idx;
+  getEl("saveBillBtn").style.display = "none";
+  getEl("printBillBtn").style.display = "inline-block";
+  getEl("updateBillBtn").style.display = "inline-block";
+  getEl("cancelEditBtn").style.display = "inline-block";
+  renderBillItems();
+  calcGrandTotal();
+  document.querySelector('[href="#billing"]').click();
+}
+
+function updateBill() {
+  const idx = parseInt(getEl("editingBillIndex").value);
+  if(idx < 0) { alert("No bill being edited"); return; }
+  if(!getEl("billPatientName").value) { alert("Load patient first"); return; }
+  if(billItems.length === 0) { alert("Add at least one medicine item"); return; }
+  
+  const bills = safeGet("allBills");
+  bills[idx] = {
+    billNo: getEl("billNo").value,
+    date: getEl("billDate").value,
+    regNo: getEl("billRegNo").value,
+    patientName: getEl("billPatientName").value,
+    mobile: getEl("billPatientMobile").value,
+    ageGender: getEl("billPatientAgeGender").value,
+    address: getEl("billPatientAddress").value,
+    items: [...billItems],
+    discount: parseFloat(getEl("billDiscount").value||0),
+    paymentMode: getEl("billPaymentMode").value,
+    grandTotal: parseFloat(getEl("billGrandTotal").value||0)
+  };
+  safeSet("allBills", bills);
+  alert("Bill updated successfully!");
+  renderSavedBills();
+  newBill();
+  updateHomeStats();
+}
+
+function cancelEdit() { newBill(); renderSavedBills(); }
+
+function renderSavedBills() {
+  const dateFilter = getEl("billSearchDate")?.value || "";
+  const noFilter = (getEl("billSearchNo")?.value || "").toLowerCase();
+  const patientFilter = (getEl("billSearchPatient")?.value || "").toLowerCase();
+  
+  let bills = safeGet("allBills");
+  if(dateFilter) bills = bills.filter(b => b.date === dateFilter);
+  if(noFilter) bills = bills.filter(b => (b.billNo||"").toLowerCase().includes(noFilter));
+  if(patientFilter) bills = bills.filter(b => (b.patientName||"").toLowerCase().includes(patientFilter));
+  bills.sort((a,b) => (b.date||"").localeCompare(a.date||""));
+  
+  const tbody = getEl("savedBillsTable");
+  if(bills.length === 0) {
+    tbody.innerHTML = "<tr><td colspan='7' class='text-center'>No bills found</td></tr>";
+    return;
+  }
+  
+  tbody.innerHTML = bills.map(b => 
+    `<tr><td>${b.billNo}</td><td>${b.date||""}</td><td>${b.patientName||""}</td>
+    <td>${b.mobile||""}</td><td>Rs ${(b.grandTotal||0).toFixed(2)}</td><td>${b.paymentMode||""}</td>
+    <td><button class="btn btn-sm btn-info me-1" onclick="editBill('${b.billNo}')">Edit</button> 
+    <button class="btn btn-sm btn-success" onclick="printSavedBill('${b.billNo}')">Print</button></td></tr>`
+  ).join("");
+}
+
+function printSavedBill(billNo) {
+  const bills = safeGet("allBills");
+  const b = bills.find(x => x.billNo === billNo);
+  if(!b) { alert("Bill not found"); return; }
+  
+  const totalCharge = b.items.reduce((s,it) => s + parseFloat(it.amount||0), 0);
+  const discount = parseFloat(b.discount||0);
+  const grandTotal = Math.max(0, totalCharge - discount);
+  
+  getEl("printSection").innerHTML = getBillPrintHTML(b, b.items, totalCharge, discount, grandTotal);
+  window.print();
+}
+
+function printBill() {
+  if(!getEl("billPatientName").value) { alert("Load patient first"); return; }
+  
+  const totalCharge = billItems.reduce((s,it) => s + parseFloat(it.amount||0), 0);
+  const discount = parseFloat(getEl("billDiscount").value||0);
+  const grandTotal = Math.max(0, totalCharge - discount);
+  
+  const mockBill = {
+    regNo: getEl("billRegNo").value,
+    billNo: getEl("billNo").value,
+    date: getEl("billDate").value,
+    paymentMode: getEl("billPaymentMode").value,
+    patientName: getEl("billPatientName").value,
+    ageGender: getEl("billPatientAgeGender").value,
+    mobile: getEl("billPatientMobile").value,
+    address: getEl("billPatientAddress").value
+  };
+  
+  getEl("printSection").innerHTML = getBillPrintHTML(mockBill, billItems, totalCharge, discount, grandTotal);
+  window.print();
+}
+
+function getBillPrintHTML(b, items, totalCharge, discount, grandTotal) {
+  return `
+<div style="font-family:'Segoe UI',sans-serif;width:210mm;min-height:148mm;margin:0 auto;padding:15px 20px;box-sizing:border-box;">
+<div style="text-align:center;border-bottom:3px solid #1a5632;padding-bottom:10px;margin-bottom:10px;">
+<img src="https://uploads.onecompiler.io/43748udj2/1780742591310/photo_2026-06-06_10-55-18.jpg" style="width:65px;margin-bottom:8px;">
+<h3 style="margin:0;color:#1a5632;font-size:18px;font-weight:700;">Shree Manju Homoeopathic Clinic & Health Care Centre</h3>
+<p style="margin:2px 0;font-size:12px;color:#333;">Natural Healing Since 1998 | Mob: 9004530642 / 9695333642</p>
+<p style="margin:2px 0 0 0;font-size:11px;">Answa, Dautapur, Handia, Prayagraj, Uttar Pradesh - 221503</p>
+</div>
+<div style="text-align:center;margin:8px 0;">
+<h3 style="margin:0;color:#1a5632;font-size:17px;letter-spacing:1px;">BILL / INVOICE</h3>
+</div>
+<table style="width:100%;font-size:13px;border-collapse:collapse;margin:5px 0;">
+<tr><td style="font-weight:700;width:28%;padding:4px 5px;border-bottom:1px solid #ddd;">Reg. No.</td><td style="width:32%;padding:4px 5px;border-bottom:1px solid #ddd;">: ${b.regNo||""}</td><td style="font-weight:700;width:20%;padding:4px 5px;border-bottom:1px solid #ddd;">Bill No.</td><td style="width:20%;padding:4px 5px;border-bottom:1px solid #ddd;">: ${b.billNo}</td></tr>
+<tr><td style="font-weight:700;padding:4px 5px;border-bottom:1px solid #ddd;">Date</td><td style="padding:4px 5px;border-bottom:1px solid #ddd;">: ${b.date||""}</td><td style="font-weight:700;padding:4px 5px;border-bottom:1px solid #ddd;">Pay Mode</td><td style="padding:4px 5px;border-bottom:1px solid #ddd;">: ${b.paymentMode||""}</td></tr>
+<tr><td style="font-weight:700;padding:4px 5px;border-bottom:1px solid #ddd;">Patient</td><td style="padding:4px 5px;border-bottom:1px solid #ddd;">: ${b.patientName||""}</td><td style="font-weight:700;padding:4px 5px;border-bottom:1px solid #ddd;">Age/Gender</td><td style="padding:4px 5px;border-bottom:1px solid #ddd;">: ${b.ageGender||""}</td></tr>
+<tr><td style="font-weight:700;padding:4px 5px;border-bottom:1px solid #ddd;">Mobile</td><td style="padding:4px 5px;border-bottom:1px solid #ddd;">: ${b.mobile||"-"}</td><td style="font-weight:700;padding:4px 5px;border-bottom:1px solid #ddd;"></td><td style="padding:4px 5px;border-bottom:1px solid #ddd;"></td></tr>
+<tr><td style="font-weight:700;padding:4px 5px;border-bottom:1px solid #ddd;">Address</td><td colspan="3" style="padding:4px 5px;border-bottom:1px solid #ddd;">: ${b.address||"-"}</td></tr>
+</table>
+<div style="margin-top:10px;">
+<table style="width:100%;font-size:12px;border-collapse:collapse;">
+<thead><tr style="background:#2d8a4e;color:white;"><th>#</th><th>Medicine</th><th>Potency</th><th>Qty</th><th>Rate</th><th>Amount</th></tr></thead>
+<tbody>${items.map((it,i)=>`<tr><td>${i+1}</td><td>${it.name}</td><td>${it.potency}</td><td>${it.qty}</td><td>${it.rate}</td><td>${it.amount.toFixed(2)}</td></tr>`).join("")}</tbody>
+</table>
+</div>
+<div style="border-top:3px solid #1a5632;padding-top:8px;margin-top:15px;">
+<table style="width:100%;font-size:14px;border-collapse:collapse;">
+<tr><td style="font-weight:700;text-align:right;padding:6px 10px;width:60%;">Medicine Charges</td><td style="text-align:right;padding:6px 10px;width:40%;">Rs ${totalCharge.toFixed(2)}</td></tr>
+<tr><td style="font-weight:700;text-align:right;padding:6px 10px;color:#c0392b;">Discount (-)</td><td style="text-align:right;padding:6px 10px;color:#c0392b;">Rs ${discount.toFixed(2)}</td></tr>
+<tr style="background:#e8f5e9;"><td style="font-weight:700;text-align:right;padding:8px 10px;font-size:16px;border-top:2px solid #1a5632;">Grand Total</td><td style="font-weight:700;text-align:right;padding:8px 10px;font-size:16px;border-top:2px solid #1a5632;">Rs ${grandTotal.toFixed(2)}</td></tr>
+</table>
+</div>
+<div style="display:flex;justify-content:space-between;margin-top:30px;font-size:13px;">
+<div style="text-align:left;"><p style="margin:0;">Patient Signature</p><div style="border-top:1px solid #333;width:120px;margin-top:30px;"></div></div>
+<div style="text-align:center;"><p style="margin:0;color:#1a5632;font-size:12px;">Thanks for visiting!</p><p style="margin:2px 0;font-size:11px;">Natural Healing Since 1998</p></div>
+<div style="text-align:right;"><p style="margin:0;">Authorized Signatory</p><div style="border-top:1px solid #333;width:120px;margin-top:30px;"></div></div>
+</div>
+</div>`;
+}
+
+window.addEventListener("DOMContentLoaded", init);
+</script>
+
+</body>
+</html>
