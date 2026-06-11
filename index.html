@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Admin Login - Shree Manju Homoeopathic Clinic</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <style>
 body {
   background: linear-gradient(135deg, #1a5632, #2d8a4e);
@@ -60,8 +64,18 @@ body {
   transform: translateY(-1px);
   box-shadow: 0 4px 15px rgba(45,138,78,0.3);
 }
+.btn-login:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
 .error-msg {
   color: #dc3545;
+  font-size: 14px;
+  margin-top: 10px;
+  display: none;
+}
+.success-msg {
+  color: #28a745;
   font-size: 14px;
   margin-top: 10px;
   display: none;
@@ -71,6 +85,15 @@ body {
   color: #999;
   margin-top: 15px;
 }
+.status-badge {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 10px;
+  margin-top: 8px;
+  display: inline-block;
+}
+.status-online { background: #d4edda; color: #155724; }
+.status-offline { background: #f8d7da; color: #721c24; }
 </style>
 </head>
 <body>
@@ -79,8 +102,11 @@ body {
   <img src="https://uploads.onecompiler.io/43748udj2/1780742591310/photo_2026-06-06_10-55-18.jpg" alt="Clinic Logo">
   <h3>Shree Manju Homoeopathic Clinic</h3>
   <p class="subtitle">Health Care Centre - Admin Login</p>
-  
-  <div class="mb-3 text-start">
+  <div id="cloudStatus">
+    <span class="status-badge status-offline" id="statusBadge">⚫ Checking connection...</span>
+  </div>
+
+  <div class="mb-3 text-start mt-3">
     <label class="form-label">Username</label>
     <input type="text" class="form-control" id="username" placeholder="Enter username" value="admin">
   </div>
@@ -88,23 +114,57 @@ body {
     <label class="form-label">Password</label>
     <input type="password" class="form-control" id="password" placeholder="Enter password">
   </div>
-  
-  <button class="btn-login" onclick="handleLogin()">🔐 Login</button>
+
+  <button class="btn-login" id="loginBtn" onclick="handleLogin()">🔐 Login</button>
   <div class="error-msg" id="errorMsg">Invalid username or password!</div>
-  
+  <div class="success-msg" id="successMsg">Connecting to cloud database...</div>
+
   <p class="footer-text">Natural Healing Since 1998 | Mob: 9004530642 | 9695333642</p>
 </div>
 
+<script src="firebase-config.js"></script>
 <script>
+// Listen for Firebase ready event
+window.addEventListener('firebaseReady', function() {
+  document.getElementById('statusBadge').textContent = '🟢 Cloud Connected';
+  document.getElementById('statusBadge').className = 'status-badge status-online';
+});
+
+// Fallback: if Firebase doesn't load in 5 seconds, mark as offline
+setTimeout(() => {
+  const badge = document.getElementById('statusBadge');
+  if (badge.textContent.includes('Checking')) {
+    badge.textContent = '🟠 Offline Mode (local only)';
+    badge.className = 'status-badge status-offline';
+  }
+}, 5000);
+
 function handleLogin() {
   const username = document.getElementById("username").value.trim();
   const password = document.getElementById("password").value;
-  
+  const loginBtn = document.getElementById("loginBtn");
+  const errorMsg = document.getElementById("errorMsg");
+  const successMsg = document.getElementById("successMsg");
+
+  errorMsg.style.display = "none";
+  successMsg.style.display = "none";
+
   if (username === "admin" && password === "Shree@121") {
+    loginBtn.disabled = true;
+    loginBtn.textContent = "⏳ Logging in...";
+    successMsg.style.display = "block";
+
+    // Store login state both locally AND in session for cloud sync
     localStorage.setItem("isLoggedIn", "true");
-    window.location.href = "dashboard.html";
+    localStorage.setItem("clinicUser", username);
+    localStorage.setItem("loginTime", new Date().toISOString());
+
+    // Redirect after brief delay to show connection status
+    setTimeout(() => {
+      window.location.href = "dashboard.html";
+    }, 800);
   } else {
-    document.getElementById("errorMsg").style.display = "block";
+    errorMsg.style.display = "block";
     document.getElementById("password").value = "";
   }
 }
