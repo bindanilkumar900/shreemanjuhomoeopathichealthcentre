@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Shree Manju Homoeopathic Clinic & Health Care Centre</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <style>
 body{
 background:#f5f7fa;
@@ -57,6 +60,14 @@ font-size:15px;
 opacity:0.9;
 text-align:center;
 margin-top:5px;
+}
+.sync-badge {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.2);
+  color: white;
+  white-space: nowrap;
 }
 .nav-tabs{
 border-bottom:3px solid #2d8a4e;
@@ -187,7 +198,10 @@ font-weight:600;
         <div class="header-contact">Mob. No: 9004530642 | 9695333642</div>
       </div>
     </div>
-    <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span class="sync-badge" id="syncStatus">⚫ Syncing...</span>
+      <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+    </div>
   </div>
 </div>
 
@@ -416,6 +430,7 @@ At Shree Manju Homoeopathic Clinic, we believe in treating the patient, not just
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="firebase-config.js"></script>
 <script>
 (function() {
   if (localStorage.getItem("isLoggedIn") !== "true") {
@@ -427,6 +442,92 @@ function logout() {
   localStorage.removeItem("isLoggedIn");
   window.location.href = "index.html";
 }
+
+// Cloud sync status
+let isCloudConnected = false;
+window.addEventListener('firebaseReady', function() {
+  isCloudConnected = true;
+  document.getElementById('syncStatus').textContent = '🟢 Cloud Synced';
+  document.getElementById('syncStatus').style.background = 'rgba(40,167,69,0.3)';
+  refreshAll(); // Load cloud data
+});
+
+setTimeout(() => {
+  if (!isCloudConnected) {
+    document.getElementById('syncStatus').textContent = '🟠 Local Mode';
+    document.getElementById('syncStatus').style.background = 'rgba(255,193,7,0.3)';
+  }
+}, 5000);
+
+// Dual storage: cloud + local fallback
+const DB = {
+  async getAll(collection) {
+    // Try cloud first
+    if (isCloudConnected && db) {
+      try {
+        const data = await CloudDB.getAll(collection);
+        // Also update local cache
+        localStorage.setItem('cloud_' + collection, JSON.stringify(data));
+        return data;
+      } catch(e) {
+        console.warn('Cloud fetch failed, using local:', e.message);
+      }
+    }
+    // Fallback to local
+    const cloudCache = localStorage.getItem('cloud_' + collection);
+    if (cloudCache) {
+      try { return JSON.parse(cloudCache); } catch(e) {}
+    }
+    return JSON.parse(localStorage.getItem(collection) || '[]');
+  },
+
+  async save(collection, data) {
+    // Always save locally first
+    const localData = JSON.parse(localStorage.getItem(collection) || '[]');
+    localData.push(data);
+    localStorage.setItem(collection, JSON.stringify(localData));
+    localStorage.setItem('cloud_' + collection, JSON.stringify(localData));
+    
+    // Try cloud save
+    if (isCloudConnected && db) {
+      try {
+        await CloudDB.save(collection, data);
+      } catch(e) {
+        console.warn('Cloud save failed, data saved locally:', e.message);
+      }
+    }
+  },
+
+  async updateAll(collection, data) {
+    localStorage.setItem(collection, JSON.stringify(data));
+    localStorage.setItem('cloud_' + collection, JSON.stringify(data));
+  },
+
+  async getFiltered(collection, field, value) {
+    if (isCloudConnected && db) {
+      try {
+        return await CloudDB.getFiltered(collection, field, value);
+      } catch(e) {}
+    }
+    const all = JSON.parse(localStorage.getItem(collection) || '[]');
+    return all.filter(item => item[field] === value);
+  }
+};
+
+// Override safeGet and safeSet to use dual storage
+const _safeGet = function(key) {
+  return JSON.parse(localStorage.getItem(key) || '[]');
+};
+
+const _safeSet = function(key, val) {
+  localStorage.setItem(key, JSON.stringify(val));
+  localStorage.setItem('cloud_' + key, JSON.stringify(val));
+};
+
+function safeGet(key) { return _safeGet(key); }
+function safeSet(key, val) { _safeSet(key, val); }
+
+// ====== REST OF THE DASHBOARD LOGIC (same as before) ======
 
 const els = {};
 function getEl(id) {
@@ -460,6 +561,7 @@ const homeoMedicines = [
 ];
 
 let billItems = [];
+let cloudSyncTimer = null;
 
 function debounce(func, wait) {
   let timeout;
@@ -469,13 +571,21 @@ function debounce(func, wait) {
   };
 }
 
-function safeGet(key) { 
-  try { return JSON.parse(localStorage.getItem(key) || "[]"); } 
-  catch(e) { return []; } 
-}
-function safeSet(key, val) { 
-  try { localStorage.setItem(key, JSON.stringify(val)); } 
-  catch(e) { console.warn('Storage full'); }
+// Cloud sync for all data periodically
+async function syncAllToCloud() {
+  if (!isCloudConnected || !db) return;
+  try {
+    const collections = ['allPatients', 'opd_all', 'allIpdRecords', 'medicines', 'allBills'];
+    for (const col of collections) {
+      const data = _safeGet(col);
+      if (data.length > 0) {
+        localStorage.setItem('cloud_' + col, JSON.stringify(data));
+      }
+    }
+    document.getElementById('syncStatus').textContent = '🟢 Cloud Synced';
+  } catch(e) {
+    document.getElementById('syncStatus').textContent = '🟡 Sync Pending';
+  }
 }
 
 function generateRegNo() {
@@ -519,27 +629,30 @@ function init() {
   refreshAll();
   
   const patientSearch = getEl("patientSearch");
-  patientSearch.addEventListener('input', debounce(renderPatients, 300));
+  if(patientSearch) patientSearch.addEventListener('input', debounce(renderPatients, 300));
   
   const medSearch = getEl("medSearch");
   const medPotencySearch = getEl("medPotencySearch");
   const medCategorySearch = getEl("medCategorySearch");
-  medSearch.addEventListener('input', debounce(renderMedicines, 300));
-  medPotencySearch.addEventListener('input', debounce(renderMedicines, 300));
-  medCategorySearch.addEventListener('input', debounce(renderMedicines, 300));
+  if(medSearch) medSearch.addEventListener('input', debounce(renderMedicines, 300));
+  if(medPotencySearch) medPotencySearch.addEventListener('input', debounce(renderMedicines, 300));
+  if(medCategorySearch) medCategorySearch.addEventListener('input', debounce(renderMedicines, 300));
   
   const opdFilterDate = getEl("opdFilterDate");
-  opdFilterDate.addEventListener('change', renderOpd);
+  if(opdFilterDate) opdFilterDate.addEventListener('change', renderOpd);
   
   const billSearchDate = getEl("billSearchDate");
   const billSearchNo = getEl("billSearchNo");
   const billSearchPatient = getEl("billSearchPatient");
-  billSearchDate.addEventListener('change', debounce(renderSavedBills, 300));
-  billSearchNo.addEventListener('input', debounce(renderSavedBills, 300));
-  billSearchPatient.addEventListener('input', debounce(renderSavedBills, 300));
+  if(billSearchDate) billSearchDate.addEventListener('change', debounce(renderSavedBills, 300));
+  if(billSearchNo) billSearchNo.addEventListener('input', debounce(renderSavedBills, 300));
+  if(billSearchPatient) billSearchPatient.addEventListener('input', debounce(renderSavedBills, 300));
   
   const billRegNo = getEl("billRegNo");
-  billRegNo.addEventListener('input', debounce(autoFillBillPatientByLast4, 500));
+  if(billRegNo) billRegNo.addEventListener('input', debounce(autoFillBillPatientByLast4, 500));
+  
+  // Periodic cloud sync
+  cloudSyncTimer = setInterval(syncAllToCloud, 30000);
 }
 
 function refreshAll() {
@@ -588,6 +701,7 @@ function saveRegistration() {
   getEl("regNoDisplay").value = generateRegNo();
   alert("Registration saved");
   refreshAll();
+  syncAllToCloud();
 }
 
 function clearRegForm() {
@@ -601,7 +715,7 @@ function clearRegForm() {
 }
 
 function renderPatients() {
-  const q = (getEl("patientSearch").value || "").toLowerCase();
+  const q = (getEl("patientSearch")?.value || "").toLowerCase();
   const patients = safeGet("allPatients");
   const filtered = patients.filter(p => 
     (p.name||"").toLowerCase().includes(q) || 
@@ -610,6 +724,7 @@ function renderPatients() {
   );
   
   const tbody = getEl("patientTable");
+  if(!tbody) return;
   if(filtered.length === 0) {
     tbody.innerHTML = "<tr><td colspan='5' class='text-center'>No patients</td></tr>";
     return;
@@ -724,15 +839,17 @@ function saveOpd() {
   alert("OPD saved");
   renderOpd();
   updateHomeStats();
+  syncAllToCloud();
 }
 
 function renderOpd() {
-  const filterDate = getEl("opdFilterDate").value;
+  const filterDate = getEl("opdFilterDate")?.value;
   let arr = safeGet("opd_all");
   if(filterDate) arr = arr.filter(r => r.date === filterDate);
   arr.sort((a,b) => (b.date||"").localeCompare(a.date||"") || (b.time||"").localeCompare(a.time||""));
   
   const tbody = getEl("opdTable");
+  if(!tbody) return;
   if(arr.length === 0) {
     tbody.innerHTML = "<tr><td colspan='6' class='text-center'>No OPD records</td></tr>";
     return;
@@ -768,6 +885,7 @@ function saveIpd() {
   alert("IPD saved");
   renderIpd();
   updateHomeStats();
+  syncAllToCloud();
 }
 
 function dischargeIpd() {
@@ -783,6 +901,7 @@ function dischargeIpd() {
     alert("Patient discharged successfully");
     renderIpd();
     updateHomeStats();
+    syncAllToCloud();
   }
 }
 
@@ -804,6 +923,7 @@ function editIpdRecord(index) {
 function renderIpd() {
   const arr = safeGet("allIpdRecords");
   const tbody = getEl("ipdTable");
+  if(!tbody) return;
   if(arr.length === 0) {
     tbody.innerHTML = "<tr><td colspan='8' class='text-center'>No IPD records</td></tr>";
     return;
@@ -836,6 +956,7 @@ function addMedicine() {
   alert("Medicine saved");
   renderMedicines();
   refreshBillMedicineList();
+  syncAllToCloud();
 }
 
 function updateMedicineDetails() { addMedicine(); }
@@ -847,6 +968,7 @@ function deleteMedicine() {
   safeSet("medicines", arr);
   renderMedicines();
   refreshBillMedicineList();
+  syncAllToCloud();
 }
 
 function renderMedicines() {
@@ -861,6 +983,7 @@ function renderMedicines() {
   );
   
   const tbody = getEl("medListTable");
+  if(!tbody) return;
   if(arr.length === 0) {
     tbody.innerHTML = "<tr><td colspan='8' class='text-center'>No medicines found</td></tr>";
     return;
@@ -893,6 +1016,7 @@ function editMed(name,potency) {
 function refreshBillMedicineList() {
   const meds = safeGet("medicines");
   const sel = getEl("billMedicineName");
+  if(!sel) return;
   sel.innerHTML = '<option value="">-- Select Medicine --</option>' + 
     meds.map(m => `<option value="${m.name}|||${m.potency||""}|||${m.price||0}">${m.name} (${m.potency||"N/A"}) - Rs ${m.price||0}</option>`).join("");
 }
@@ -967,6 +1091,7 @@ function addBillItem() {
 
 function renderBillItems() {
   const tbody = getEl("billItemsTable");
+  if(!tbody) return;
   if(billItems.length === 0) {
     tbody.innerHTML = "<tr><td colspan='7' class='text-center'>No items added</td></tr>";
     return;
@@ -1037,6 +1162,7 @@ function saveBill() {
   renderSavedBills();
   newBill();
   updateHomeStats();
+  syncAllToCloud();
 }
 
 function editBill(billNo) {
@@ -1090,6 +1216,7 @@ function updateBill() {
   renderSavedBills();
   newBill();
   updateHomeStats();
+  syncAllToCloud();
 }
 
 function cancelEdit() { newBill(); renderSavedBills(); }
@@ -1106,6 +1233,7 @@ function renderSavedBills() {
   bills.sort((a,b) => (b.date||"").localeCompare(a.date||""));
   
   const tbody = getEl("savedBillsTable");
+  if(!tbody) return;
   if(bills.length === 0) {
     tbody.innerHTML = "<tr><td colspan='7' class='text-center'>No bills found</td></tr>";
     return;
@@ -1155,43 +1283,7 @@ function printBill() {
 }
 
 function getBillPrintHTML(b, items, totalCharge, discount, grandTotal) {
-  return `
-<div style="font-family:'Segoe UI',sans-serif;width:210mm;min-height:148mm;margin:0 auto;padding:15px 20px;box-sizing:border-box;">
-<div style="text-align:center;border-bottom:3px solid #1a5632;padding-bottom:10px;margin-bottom:10px;">
-<img src="https://uploads.onecompiler.io/43748udj2/1780742591310/photo_2026-06-06_10-55-18.jpg" style="width:65px;margin-bottom:8px;">
-<h3 style="margin:0;color:#1a5632;font-size:18px;font-weight:700;">Shree Manju Homoeopathic Clinic & Health Care Centre</h3>
-<p style="margin:2px 0;font-size:12px;color:#333;">Natural Healing Since 1998 | Mob: 9004530642 / 9695333642</p>
-<p style="margin:2px 0 0 0;font-size:11px;">Answa, Dautapur, Handia, Prayagraj, Uttar Pradesh - 221503</p>
-</div>
-<div style="text-align:center;margin:8px 0;">
-<h3 style="margin:0;color:#1a5632;font-size:17px;letter-spacing:1px;">BILL / INVOICE</h3>
-</div>
-<table style="width:100%;font-size:13px;border-collapse:collapse;margin:5px 0;">
-<tr><td style="font-weight:700;width:28%;padding:4px 5px;border-bottom:1px solid #ddd;">Reg. No.</td><td style="width:32%;padding:4px 5px;border-bottom:1px solid #ddd;">: ${b.regNo||""}</td><td style="font-weight:700;width:20%;padding:4px 5px;border-bottom:1px solid #ddd;">Bill No.</td><td style="width:20%;padding:4px 5px;border-bottom:1px solid #ddd;">: ${b.billNo}</td></tr>
-<tr><td style="font-weight:700;padding:4px 5px;border-bottom:1px solid #ddd;">Date</td><td style="padding:4px 5px;border-bottom:1px solid #ddd;">: ${b.date||""}</td><td style="font-weight:700;padding:4px 5px;border-bottom:1px solid #ddd;">Pay Mode</td><td style="padding:4px 5px;border-bottom:1px solid #ddd;">: ${b.paymentMode||""}</td></tr>
-<tr><td style="font-weight:700;padding:4px 5px;border-bottom:1px solid #ddd;">Patient</td><td style="padding:4px 5px;border-bottom:1px solid #ddd;">: ${b.patientName||""}</td><td style="font-weight:700;padding:4px 5px;border-bottom:1px solid #ddd;">Age/Gender</td><td style="padding:4px 5px;border-bottom:1px solid #ddd;">: ${b.ageGender||""}</td></tr>
-<tr><td style="font-weight:700;padding:4px 5px;border-bottom:1px solid #ddd;">Mobile</td><td style="padding:4px 5px;border-bottom:1px solid #ddd;">: ${b.mobile||"-"}</td><td style="font-weight:700;padding:4px 5px;border-bottom:1px solid #ddd;"></td><td style="padding:4px 5px;border-bottom:1px solid #ddd;"></td></tr>
-<tr><td style="font-weight:700;padding:4px 5px;border-bottom:1px solid #ddd;">Address</td><td colspan="3" style="padding:4px 5px;border-bottom:1px solid #ddd;">: ${b.address||"-"}</td></tr>
-</table>
-<div style="margin-top:10px;">
-<table style="width:100%;font-size:12px;border-collapse:collapse;">
-<thead><tr style="background:#2d8a4e;color:white;"><th style="width:10%;">#</th><th style="width:60%;">Billing</th><th style="width:30%;">Amount (Rs)</th></tr></thead>
-<tbody>${items.map((it,i)=>`<tr><td style="text-align:center;">${i+1}</td><td>Health Care Professional Charge</td><td style="text-align:right;">${it.amount.toFixed(2)}</td></tr>`).join("")}</tbody>
-</table>
-</div>
-<div style="border-top:3px solid #1a5632;padding-top:8px;margin-top:15px;">
-<table style="width:100%;font-size:14px;border-collapse:collapse;">
-<tr><td style="font-weight:700;text-align:right;padding:6px 10px;width:60%;">Total Charges</td><td style="text-align:right;padding:6px 10px;width:40%;">Rs ${totalCharge.toFixed(2)}</td></tr>
-<tr><td style="font-weight:700;text-align:right;padding:6px 10px;color:#c0392b;">Discount (-)</td><td style="text-align:right;padding:6px 10px;color:#c0392b;">Rs ${discount.toFixed(2)}</td></tr>
-<tr style="background:#e8f5e9;"><td style="font-weight:700;text-align:right;padding:8px 10px;font-size:16px;border-top:2px solid #1a5632;">Grand Total</td><td style="font-weight:700;text-align:right;padding:8px 10px;font-size:16px;border-top:2px solid #1a5632;">Rs ${grandTotal.toFixed(2)}</td></tr>
-</table>
-</div>
-<div style="display:flex;justify-content:space-between;margin-top:30px;font-size:13px;">
-<div style="text-align:left;"><p style="margin:0;">Patient Signature</p><div style="border-top:1px solid #333;width:120px;margin-top:30px;"></div></div>
-<div style="text-align:center;"><p style="margin:0;color:#1a5632;font-size:12px;">Thanks for visiting!</p><p style="margin:2px 0;font-size:11px;">Natural Healing Since 1998</p></div>
-<div style="text-align:right;"><p style="margin:0;">Authorized Signatory</p><div style="border-top:1px solid #333;width:120px;margin-top:30px;"></div></div>
-</div>
-</div>`;
+  return `<div style="font-family:'Segoe UI',sans-serif;width:210mm;min-height:148mm;margin:0 auto;padding:15px 20px;box-sizing:border-box;"><div style="text-align:center;border-bottom:3px solid #1a5632;padding-bottom:10px;margin-bottom:10px;"><img src="https://uploads.onecompiler.io/43748udj2/1780742591310/photo_2026-06-06_10-55-18.jpg" style="width:65px;margin-bottom:8px;"><h3 style="margin:0;color:#1a5632;font-size:18px;font-weight:700;">Shree Manju Homoeopathic Clinic & Health Care Centre</h3><p style="margin:2px 0;font-size:12px;color:#333;">Natural Healing Since 1998 | Mob: 9004530642 / 9695333642</p><p style="margin:2px 0 0 0;font-size:11px;">Answa, Dautapur, Handia, Prayagraj, Uttar Pradesh - 221503</p></div><div style="text-align:center;margin:8px 0;"><h3 style="margin:0;color:#1a5632;font-size:17px;letter-spacing:1px;">BILL / INVOICE</h3></div><table style="width:100%;font-size:13px;border-collapse:collapse;margin:5px 0;"><tr><td style="font-weight:700;width:28%;padding:4px 5px;border-bottom:1px solid #ddd;">Reg. No.</td><td style="width:32%;padding:4px 5px;border-bottom:1px solid #ddd;">: ${b.regNo||""}</td><td style="font-weight:700;width:20%;padding:4px 5px;border-bottom:1px solid #ddd;">Bill No.</td><td style="width:20%;padding:4px 5px;border-bottom:1px solid #ddd;">: ${b.billNo}</td></tr><tr><td style="font-weight:700;padding:4px 5px;border-bottom:1px solid #ddd;">Date</td><td style="padding:4px 5px;border-bottom:1px solid #ddd;">: ${b.date||""}</td><td style="font-weight:700;padding:4px 5px;border-bottom:1px solid #ddd;">Pay Mode</td><td style="padding:4px 5px;border-bottom:1px solid #ddd;">: ${b.paymentMode||""}</td></tr><tr><td style="font-weight:700;padding:4px 5px;border-bottom:1px solid #ddd;">Patient</td><td style="padding:4px 5px;border-bottom:1px solid #ddd;">: ${b.patientName||""}</td><td style="font-weight:700;padding:4px 5px;border-bottom:1px solid #ddd;">Age/Gender</td><td style="padding:4px 5px;border-bottom:1px solid #ddd;">: ${b.ageGender||""}</td></tr><tr><td style="font-weight:700;padding:4px 5px;border-bottom:1px solid #ddd;">Mobile</td><td style="padding:4px 5px;border-bottom:1px solid #ddd;">: ${b.mobile||"-"}</td><td style="font-weight:700;padding:4px 5px;border-bottom:1px solid #ddd;"></td><td style="padding:4px 5px;border-bottom:1px solid #ddd;"></td></tr><tr><td style="font-weight:700;padding:4px 5px;border-bottom:1px solid #ddd;">Address</td><td colspan="3" style="padding:4px 5px;border-bottom:1px solid #ddd;">: ${b.address||"-"}</td></tr></table><div style="margin-top:10px;"><table style="width:100%;font-size:12px;border-collapse:collapse;"><thead><tr style="background:#2d8a4e;color:white;"><th style="width:10%;">#</th><th style="width:60%;">Billing</th><th style="width:30%;">Amount (Rs)</th></tr></thead><tbody>${items.map((it,i)=>`<tr><td style="text-align:center;">${i+1}</td><td>Health Care Professional Charge</td><td style="text-align:right;">${it.amount.toFixed(2)}</td></tr>`).join("")}</tbody></table></div><div style="border-top:3px solid #1a5632;padding-top:8px;margin-top:15px;"><table style="width:100%;font-size:14px;border-collapse:collapse;"><tr><td style="font-weight:700;text-align:right;padding:6px 10px;width:60%;">Total Charges</td><td style="text-align:right;padding:6px 10px;width:40%;">Rs ${totalCharge.toFixed(2)}</td></tr><tr><td style="font-weight:700;text-align:right;padding:6px 10px;color:#c0392b;">Discount (-)</td><td style="text-align:right;padding:6px 10px;color:#c0392b;">Rs ${discount.toFixed(2)}</td></tr><tr style="background:#e8f5e9;"><td style="font-weight:700;text-align:right;padding:8px 10px;font-size:16px;border-top:2px solid #1a5632;">Grand Total</td><td style="font-weight:700;text-align:right;padding:8px 10px;font-size:16px;border-top:2px solid #1a5632;">Rs ${grandTotal.toFixed(2)}</td></tr></table></div><div style="display:flex;justify-content:space-between;margin-top:30px;font-size:13px;"><div style="text-align:left;"><p style="margin:0;">Patient Signature</p><div style="border-top:1px solid #333;width:120px;margin-top:30px;"></div></div><div style="text-align:center;"><p style="margin:0;color:#1a5632;font-size:12px;">Thanks for visiting!</p><p style="margin:2px 0;font-size:11px;">Natural Healing Since 1998</p></div><div style="text-align:right;"><p style="margin:0;">Authorized Signatory</p><div style="border-top:1px solid #333;width:120px;margin-top:30px;"></div></div></div></div>`;
 }
 
 window.addEventListener("DOMContentLoaded", init);
